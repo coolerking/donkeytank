@@ -1,5 +1,5 @@
 # donkeytank
-donkey tank
+donkey tank with donkeycar 5.0.dev3
 
 ## setup
 
