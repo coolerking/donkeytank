@@ -937,4 +937,5 @@ def get_js_controller(cfg):
             raise
     
     
-    
+class MyJoystickController(ELECOM_JCU3912TController):
+    pass
