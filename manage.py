@@ -1131,6 +1131,46 @@ def add_drivetrain(V, cfg):
                         )
             V.add(vesc, inputs=['steering', 'throttle'])
 
+        elif cfg.DRIVE_TRAIN_TYPE == "DC_TWO_WHEEL_PIGPIO":
+            try:
+                import pigpio
+            except:
+                raise
+            # pigpio 制御開始
+            pgio = pigpio.pi()
+
+            from parts import PIGPIO_OUT, PIGPIO_PWM, CaterpillerMotorDriver
+
+            # TB6612 STBY ピン初期化
+            stby = PIGPIO_OUT(pin=cfg.TB6612_STBY_GPIO, pgio=pgio) #, debug=use_debug)
+            stby.run(1)
+
+            # ジョイスティック出力値をDCモータ入力値に変換
+            driver = CaterpillerMotorDriver(
+                left_balance=cfg.LEFT_PWM_BALANCE, 
+                right_balance=cfg.RIGHT_PWM_BALANCE) #,
+                #debug=use_debug)
+            V.add(driver, 
+                inputs=['throttle', 'angle'],
+                outputs=['left_motor_vref', 'left_motor_in1', 'left_motor_in2',
+                'right_motor_vref', 'right_motor_in1', 'right_motor_in2'])
+
+            # 左モータ制御
+            left_in1 = PIGPIO_OUT(pin=cfg.LEFT_MOTOR_IN1_GPIO, pgio=pgio) #, debug=use_debug)
+            left_in2 = PIGPIO_OUT(pin=cfg.LEFT_MOTOR_IN2_GPIO, pgio=pgio) #, debug=use_debug)
+            left_vref = PIGPIO_PWM(pin=cfg.LEFT_MOTOR_PWM_GPIO, pgio=pgio, freq=cfg.PWM_FREQ, range=cfg.PWM_RANGE) #, debug=use_debug)
+            V.add(left_in1, inputs=['left_motor_in1'])
+            V.add(left_in2, inputs=['left_motor_in2'])
+            V.add(left_vref, inputs=['left_motor_vref'])  
+
+            # 右モータ制御
+            right_in1 = PIGPIO_OUT(pin=cfg.RIGHT_MOTOR_IN1_GPIO, pgio=pgio) #, debug=use_debug)
+            right_in2 = PIGPIO_OUT(pin=cfg.RIGHT_MOTOR_IN2_GPIO, pgio=pgio) #, debug=use_debug)
+            right_vref = PIGPIO_PWM(pin=cfg.RIGHT_MOTOR_PWM_GPIO, pgio=pgio, freq=cfg.PWM_FREQ, range=cfg.PWM_RANGE) #, debug=use_debug)
+            V.add(right_in1, inputs=['right_motor_in1'])
+            V.add(right_in2, inputs=['right_motor_in2'])
+            V.add(right_vref, inputs=['right_motor_vref'])
+
 
 if __name__ == '__main__':
     args = docopt(__doc__)

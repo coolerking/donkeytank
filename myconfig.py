@@ -21,6 +21,7 @@
 # 
 # #CAMERA
 # CAMERA_TYPE = "PICAM"   # (PICAM|WEBCAM|CVCAM|CSIC|V4L|D435|MOCK|IMAGE_LIST)
+CAMERA_TYPE = "PICAM"
 # IMAGE_W = 160
 # IMAGE_H = 120
 # IMAGE_DEPTH = 3         # default RGB=3, make 1 for mono
@@ -67,6 +68,7 @@
 # # (deprecated) "I2C_SERVO" uses PCA9685 servo controller to control a steering servo and an ESC, as in a standard RC car
 # #
 # DRIVE_TRAIN_TYPE = "PWM_STEERING_THROTTLE"
+DRIVE_TRAIN_TYPE = "DC_TWO_WHEEL_PIGPIO"
 # 
 # #
 # # PWM_STEERING_THROTTLE
